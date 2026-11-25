@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "secret-santa",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "DRAWING", "class_name": "Drawing" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Drawing"] }],
+  "observability": { "enabled": true }
+}

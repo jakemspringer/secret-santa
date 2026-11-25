@@ -1,0 +1,242 @@
+/* Look and envelope animation carried over from the Grok prototype. */
+:root {
+  --color-bg: #123026;
+  --color-surface: #1b4032;
+  --color-fg: #f7f1e4;
+  --color-muted: #c5d2c4;
+  --color-seal: #d4453c;
+  --color-paper: #f7f1e4;
+  --color-ink: #1c2a18;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, georgia, serif;
+  --shadow-lift: 0 12px 24px rgb(8 24 16 / 0.35);
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--color-bg); color: var(--color-fg); }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(circle at 14% 10%, color-mix(in oklab, var(--color-fg) 55%, transparent) 0 1px, transparent 2px),
+    radial-gradient(circle at 86% 16%, color-mix(in oklab, var(--color-fg) 40%, transparent) 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 84%, color-mix(in oklab, var(--color-seal) 55%, transparent) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 8% 72%, color-mix(in oklab, var(--color-fg) 35%, transparent) 0 1px, transparent 2px);
+}
+
+h1, h2 { text-wrap: balance; margin: 0; font-family: var(--font-display); font-weight: 520; line-height: 1.05; }
+p { text-wrap: pretty; }
+button { font: inherit; cursor: pointer; }
+button:disabled { cursor: default; opacity: 0.6; }
+
+main { max-width: 32rem; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding: 2rem 1.25rem; }
+header { margin-bottom: 2rem; }
+.kicker { color: var(--color-seal); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; margin: 0; }
+h1 { font-size: 3rem; margin-top: 0.5rem; }
+h2 { font-size: 1.875rem; }
+.muted { color: var(--color-muted); line-height: 1.6; margin: 0.5rem 0 2rem; max-width: 24rem; }
+.error { color: #ff8a80; font-size: 0.9rem; min-height: 1.4em; margin: 0 0 1rem; }
+
+.names { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.625rem; }
+.name-btn {
+  width: 100%; min-height: 3.5rem; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.25rem; border: 0; border-left: 4px solid var(--color-seal); border-radius: 0.75rem;
+  background: var(--color-paper); color: var(--color-ink); font-family: var(--font-display); font-size: 1.5rem;
+  text-align: left; box-shadow: var(--shadow-lift); transition: transform 150ms ease-out;
+}
+.name-btn:active, .env-btn:active, .primary:active { transform: scale(0.96); }
+.name-btn small { font-family: var(--font-sans); font-size: 0.75rem; color: #6b7a66; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.pin-form { display: flex; flex-direction: column; gap: 0.75rem; max-width: 18rem; }
+.pin-form label { font-size: 0.85rem; color: var(--color-muted); }
+.pin {
+  font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.5em; text-align: center;
+  padding: 0.6rem 0 0.6rem 0.5em; border-radius: 0.75rem; border: 2px solid var(--color-surface);
+  background: var(--color-paper); color: var(--color-ink); width: 100%;
+}
+.pin:focus { outline: none; border-color: var(--color-seal); }
+.primary {
+  min-height: 3rem; border: 0; border-radius: 0.75rem; background: var(--color-seal); color: var(--color-paper);
+  font-weight: 600; font-size: 1rem; transition: transform 150ms ease-out;
+}
+.link {
+  background: none; border: 0; padding: 0; min-height: 2.75rem; color: var(--color-muted);
+  font-size: 0.875rem; text-align: left; text-underline-offset: 4px;
+}
+.link:hover { color: var(--color-fg); text-decoration: underline; }
+.actions { margin-top: 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+
+.draw-grid { display: grid; grid-template-columns: repeat(3, 1fr); justify-items: center; column-gap: 0.25rem; row-gap: 1.75rem; }
+.env-btn { border: 0; background: transparent; padding: 0.25rem; transition: transform 150ms ease-out; }
+.stage { display: flex; justify-content: center; padding-top: 1rem; flex: 1; align-items: flex-start; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Admin */
+.card { background: var(--color-surface); border-radius: 0.875rem; padding: 1.25rem; margin-bottom: 1.25rem; }
+.card h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
+textarea, .text {
+  width: 100%; font: inherit; font-size: 1rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem;
+  border: 1px solid #335a49; background: var(--color-bg); color: var(--color-fg);
+}
+textarea { min-height: 9rem; resize: vertical; }
+.row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0; }
+.chips li { background: var(--color-bg); border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.875rem; }
+.chips li.on { background: var(--color-seal); }
+.small { font-size: 0.85rem; color: var(--color-muted); margin: 0.25rem 0; }
+.ghost { min-height: 2.5rem; padding: 0 1rem; border-radius: 0.6rem; border: 1px solid #335a49; background: transparent; color: var(--color-fg); }
+.danger { border-color: var(--color-seal); color: #ff8a80; }
+
+/* Closed: a cream envelope with a red seal. Open: a cream card, dark type. */
+.env {
+  position: relative;
+  display: block;
+  width: 6.75rem;
+  height: 4.85rem;
+}
+
+.env--stage {
+  width: 16.5rem;
+  max-width: 100%;
+  height: 12.5rem;
+}
+
+.draw-grid > :last-child:nth-child(3n + 1) {
+  grid-column: 2;
+}
+
+.env-body {
+  position: absolute;
+  inset: 18% 0 0;
+  border-radius: 0.2rem 0.2rem 0.45rem 0.45rem;
+  background: var(--color-paper);
+  box-shadow: 0 14px 22px rgb(6 20 14 / 0.35);
+}
+
+.env-body::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 58%;
+  background: color-mix(in oklab, var(--color-paper) 78%, var(--color-ink));
+  clip-path: polygon(0 42%, 50% 0, 100% 42%, 100% 100%, 0 100%);
+}
+
+.env-letter {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 58%;
+  padding: 0.85rem 0.75rem 1rem;
+  border-radius: 0.25rem;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: 0 10px 20px rgb(6 20 14 / 0.28);
+  opacity: 0;
+  transform: translateY(42%);
+  transition:
+    transform 640ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 240ms ease;
+}
+
+.env.is-open .env-letter {
+  z-index: 4;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.env-kicker {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-seal);
+}
+
+.env-name {
+  font-family: var(--font-display);
+  font-size: 2.35rem;
+  font-weight: 560;
+  line-height: 1;
+  text-align: center;
+  color: var(--color-ink);
+}
+
+.env-flap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18%;
+  height: 46%;
+  z-index: 2;
+  background: color-mix(in oklab, var(--color-paper) 82%, var(--color-seal));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: center top;
+  transition:
+    transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 320ms ease;
+}
+
+.env.is-open .env-flap {
+  opacity: 0;
+  transform: translateY(-30%) scaleY(0.4);
+}
+
+.env-seal {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: 3;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 40% 35%, color-mix(in oklab, var(--color-seal) 55%, white), var(--color-seal) 68%);
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in oklab, var(--color-ink) 30%, transparent),
+    0 2px 4px rgb(0 0 0 / 0.25);
+  transform: translate(-50%, -50%);
+  transition:
+    opacity 220ms ease,
+    transform 320ms ease;
+}
+
+.env--stage .env-seal {
+  width: 2.15rem;
+  height: 2.15rem;
+}
+
+.env-seal::after {
+  content: "";
+  position: absolute;
+  inset: 24%;
+  border: 1px solid color-mix(in oklab, var(--color-paper) 70%, transparent);
+  border-radius: inherit;
+}
+
+.env.is-open .env-seal {
+  opacity: 0;
+  transform: translate(-50%, -80%) scale(0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env-flap,
+  .env-letter,
+  .env-seal {
+    transition: none;
+  }
+}
