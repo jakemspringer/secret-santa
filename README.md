@@ -2,7 +2,7 @@
 
 Family Christmas gift exchange. Tap your name, set a PIN, take an envelope, see who you're shopping for.
 
-Cloudflare Worker + one Durable Object for state. Static page in `public/`, API in `src/index.js`. Look and envelope animation from the Grok prototype.
+Cloudflare Worker + one Durable Object for state. Static page in `public/`, API in `src/index.js`.
 
 ## How it works
 - Admin (`/admin.html`) edits the name list and "never draw each other" pairs, then locks the drawing.
