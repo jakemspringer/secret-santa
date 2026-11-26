@@ -1,108 +1,144 @@
-/* Look and envelope animation carried over from the Grok prototype. */
+/* Pine ground, knit sweater bands, cream envelopes. */
+@font-face { font-family: "Young Serif"; font-weight: 400; font-display: swap; src: url("/fonts/young-serif-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+@font-face { font-family: "Young Serif"; font-weight: 400; font-display: swap; src: url("/fonts/young-serif-400-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; font-weight: 200 800; font-display: swap; src: url("/fonts/atkinson-hyperlegible-next-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+@font-face { font-family: "Atkinson Hyperlegible Next"; font-weight: 200 800; font-display: swap; src: url("/fonts/atkinson-hyperlegible-next-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2C60-2C7F, U+A720-A7FF; }
+
 :root {
   --color-bg: #123026;
   --color-surface: #1b4032;
+  --color-line: #4d7a66;
   --color-fg: #f7f1e4;
   --color-muted: #c5d2c4;
-  --color-seal: #d4453c;
+  --color-seal: #b9332c;      /* yarn red: fills, seal, text on cream */
+  --color-seal-soft: #ff8a80; /* red for small text on pine */
   --color-paper: #f7f1e4;
   --color-ink: #1c2a18;
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces", ui-serif, georgia, serif;
-  --shadow-lift: 0 12px 24px rgb(8 24 16 / 0.35);
+  --color-ink-muted: #56644f;
+  --font-sans: "Atkinson Hyperlegible Next", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Young Serif", georgia, serif;
+  --shadow-lift: 0 10px 22px rgb(8 24 16 / 0.38);
+  --band: clamp(84px, 14vw, 105px); /* 21 stitch rows */
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html { background: var(--color-bg); color: var(--color-fg); }
+::selection { background: var(--color-seal); color: var(--color-paper); }
 
 body {
+  position: relative;
   margin: 0;
   min-height: 100dvh;
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
   color: var(--color-fg);
   background-color: var(--color-bg);
-  background-image:
-    radial-gradient(circle at 14% 10%, color-mix(in oklab, var(--color-fg) 55%, transparent) 0 1px, transparent 2px),
-    radial-gradient(circle at 86% 16%, color-mix(in oklab, var(--color-fg) 40%, transparent) 0 1px, transparent 2px),
-    radial-gradient(circle at 78% 84%, color-mix(in oklab, var(--color-seal) 55%, transparent) 0 1.5px, transparent 2.5px),
-    radial-gradient(circle at 8% 72%, color-mix(in oklab, var(--color-fg) 35%, transparent) 0 1px, transparent 2px);
 }
 
-h1, h2 { text-wrap: balance; margin: 0; font-family: var(--font-display); font-weight: 520; line-height: 1.05; }
+/* Knit bands: one across the top, one closing the page. */
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--band);
+  background: url("/knit.svg") repeat-x 0 0 / auto 100%;
+  pointer-events: none;
+}
+body::before { top: 0; box-shadow: 0 6px 14px rgb(4 14 10 / 0.45); }
+body::after { bottom: 0; background-position: 37% 0; box-shadow: 0 -6px 14px rgb(4 14 10 / 0.45); }
+
+h1, h2 { text-wrap: balance; margin: 0; font-family: var(--font-display); font-weight: 400; line-height: 1.08; letter-spacing: -0.01em; }
 p { text-wrap: pretty; }
 button { font: inherit; cursor: pointer; }
 button:disabled { cursor: default; opacity: 0.6; }
+:focus-visible { outline: 3px solid var(--color-fg); outline-offset: 3px; }
 
-main { max-width: 32rem; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding: 2rem 1.25rem; }
-header { margin-bottom: 2rem; }
-.kicker { color: var(--color-seal); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; margin: 0; }
-h1 { font-size: 3rem; margin-top: 0.5rem; }
-h2 { font-size: 1.875rem; }
-.muted { color: var(--color-muted); line-height: 1.6; margin: 0.5rem 0 2rem; max-width: 24rem; }
-.error { color: #ff8a80; font-size: 0.9rem; min-height: 1.4em; margin: 0 0 1rem; }
-
-.names { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.625rem; }
-.name-btn {
-  width: 100%; min-height: 3.5rem; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1.25rem; border: 0; border-left: 4px solid var(--color-seal); border-radius: 0.75rem;
-  background: var(--color-paper); color: var(--color-ink); font-family: var(--font-display); font-size: 1.5rem;
-  text-align: left; box-shadow: var(--shadow-lift); transition: transform 150ms ease-out;
+main {
+  max-width: 32rem; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column;
+  padding: calc(var(--band) + 2rem) 1.25rem calc(var(--band) + 2.5rem);
 }
-.name-btn:active, .env-btn:active, .primary:active { transform: scale(0.96); }
-.name-btn small { font-family: var(--font-sans); font-size: 0.75rem; color: #6b7a66; letter-spacing: 0.08em; text-transform: uppercase; }
+header { margin-bottom: 1.75rem; }
+h1 { font-size: clamp(2.5rem, 10vw, 3.25rem); }
+h2 { font-size: 1.875rem; }
+.muted { color: var(--color-muted); line-height: 1.6; margin: 0.5rem 0 1.75rem; max-width: 26rem; }
+.error { color: var(--color-seal-soft); font-size: 0.95rem; min-height: 1.4em; margin: 0 0 1rem; }
+.error:empty { min-height: 0; margin: 0; }
+
+/* Name tags: cream card with a sewn edge. */
+.names { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.name-btn {
+  width: 100%; min-height: 3.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0 1.4rem; border: 0; border-radius: 0.6rem;
+  background: var(--color-paper); color: var(--color-ink); font-family: var(--font-display); font-size: 1.5rem;
+  text-align: left; box-shadow: var(--shadow-lift);
+  outline: 2px dashed color-mix(in oklab, var(--color-seal) 55%, var(--color-paper)); outline-offset: -7px;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+}
+.name-btn:focus-visible { outline: 3px solid var(--color-fg); outline-offset: 3px; }
+.name-btn small { flex: none; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 600; color: var(--color-ink-muted); }
+@media (hover: hover) {
+  .name-btn:hover, .env-btn:hover { transform: translateY(-2px); }
+  .name-btn:hover { box-shadow: 0 14px 26px rgb(8 24 16 / 0.45); }
+}
+.name-btn:active, .env-btn:active, .primary:active { transform: scale(0.97); }
 
 .pin-form { display: flex; flex-direction: column; gap: 0.75rem; max-width: 18rem; }
-.pin-form label { font-size: 0.85rem; color: var(--color-muted); }
+.pin-form label { font-size: 0.95rem; color: var(--color-muted); }
 .pin {
-  font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.5em; text-align: center;
-  padding: 0.6rem 0 0.6rem 0.5em; border-radius: 0.75rem; border: 2px solid var(--color-surface);
-  background: var(--color-paper); color: var(--color-ink); width: 100%;
+  font-family: var(--font-sans); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 2rem; letter-spacing: 0.5em; text-align: center;
+  padding: 0.6rem 0 0.6rem 0.5em; border-radius: 0.6rem; border: 2px solid var(--color-surface);
+  background: var(--color-paper); color: var(--color-ink); caret-color: var(--color-seal); width: 100%;
 }
 .pin:focus { outline: none; border-color: var(--color-seal); }
+.pin:focus-visible { outline: 3px solid var(--color-fg); outline-offset: 3px; }
 .primary {
-  min-height: 3rem; border: 0; border-radius: 0.75rem; background: var(--color-seal); color: var(--color-paper);
-  font-weight: 600; font-size: 1rem; transition: transform 150ms ease-out;
+  min-height: 3rem; border: 0; border-radius: 0.6rem; background: var(--color-seal); color: var(--color-paper);
+  font-weight: 700; font-size: 1.05rem; box-shadow: 0 6px 14px rgb(8 24 16 / 0.35); transition: transform 150ms ease-out;
 }
 .link {
   background: none; border: 0; padding: 0; min-height: 2.75rem; color: var(--color-muted);
-  font-size: 0.875rem; text-align: left; text-underline-offset: 4px;
+  font-size: 0.95rem; text-align: left; text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 5px;
 }
-.link:hover { color: var(--color-fg); text-decoration: underline; }
+.link:hover { color: var(--color-fg); text-decoration-color: currentColor; }
 .actions { margin-top: 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
 
-.draw-grid { display: grid; grid-template-columns: repeat(3, 1fr); justify-items: center; column-gap: 0.25rem; row-gap: 1.75rem; }
-.env-btn { border: 0; background: transparent; padding: 0.25rem; transition: transform 150ms ease-out; }
+.draw-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); justify-items: center; column-gap: 0.5rem; row-gap: 1.75rem; }
+.env-btn { width: 100%; display: flex; justify-content: center; border: 0; background: transparent; padding: 0.25rem; border-radius: 0.5rem; transition: transform 150ms ease-out; }
 .stage { display: flex; justify-content: center; padding-top: 1rem; flex: 1; align-items: flex-start; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Admin */
-.card { background: var(--color-surface); border-radius: 0.875rem; padding: 1.25rem; margin-bottom: 1.25rem; }
+.card { background: var(--color-surface); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.25rem; }
 .card h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
 textarea, .text {
-  width: 100%; font: inherit; font-size: 1rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem;
-  border: 1px solid #335a49; background: var(--color-bg); color: var(--color-fg);
+  width: 100%; font: inherit; font-size: 1rem; min-height: 2.75rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem;
+  border: 1px solid var(--color-line); background: var(--color-bg); color: var(--color-fg);
 }
 textarea { min-height: 9rem; resize: vertical; }
 .row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0; }
 .chips li { background: var(--color-bg); border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.875rem; }
-.chips li.on { background: var(--color-seal); }
+.chips li.on { background: var(--color-paper); color: var(--color-ink); }
 .small { font-size: 0.85rem; color: var(--color-muted); margin: 0.25rem 0; }
-.ghost { min-height: 2.5rem; padding: 0 1rem; border-radius: 0.6rem; border: 1px solid #335a49; background: transparent; color: var(--color-fg); }
-.danger { border-color: var(--color-seal); color: #ff8a80; }
+.ghost { min-height: 2.75rem; padding: 0 1rem; border-radius: 0.6rem; border: 1px solid var(--color-line); background: transparent; color: var(--color-fg); }
+.danger { border-color: var(--color-seal-soft); color: var(--color-seal-soft); }
 
 /* Closed: a cream envelope with a red seal. Open: a cream card, dark type. */
 .env {
   position: relative;
   display: block;
-  width: 6.75rem;
-  height: 4.85rem;
+  width: min(6.75rem, 100%);
+  aspect-ratio: 6.75 / 4.85;
 }
 
 .env--stage {
   width: 16.5rem;
   max-width: 100%;
+  aspect-ratio: auto;
   height: 12.5rem;
 }
 
@@ -161,17 +197,15 @@ textarea { min-height: 9rem; resize: vertical; }
 
 .env-kicker {
   font-family: var(--font-sans);
-  font-size: 0.7rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--color-seal);
 }
 
 .env-name {
   font-family: var(--font-display);
   font-size: 2.35rem;
-  font-weight: 560;
+  font-weight: 400;
   line-height: 1;
   text-align: center;
   color: var(--color-ink);
