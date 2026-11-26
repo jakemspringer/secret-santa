@@ -167,10 +167,12 @@ export class Drawing extends DurableObject {
   }
 
   async admin(state, path, request) {
-    const given = request.headers.get("x-admin-key") ?? "";
-    if (!this.env.ADMIN_KEY || !timingSafeEqual(given, this.env.ADMIN_KEY)) {
-      return fail(401, "Wrong admin key.");
+    const expected = (this.env.ADMIN_KEY ?? "").trim();
+    if (!expected) {
+      return fail(401, "No admin key is set on the server. Add ADMIN_KEY as a runtime secret on the Worker.");
     }
+    const given = (request.headers.get("x-admin-key") ?? "").trim();
+    if (!timingSafeEqual(given, expected)) return fail(401, "Wrong admin key.");
     const body = request.method === "GET" ? null : await request.json().catch(() => ({}));
     const view = () =>
       json({

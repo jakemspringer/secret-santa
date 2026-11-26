@@ -19,7 +19,7 @@ async function api(path, method = "GET", body) {
   if (res.status === 401) {
     try { sessionStorage.removeItem(KEY); } catch {}
     adminKey = "";
-    showLogin("Wrong admin key.");
+    showLogin(data.error || "Wrong admin key.");
     throw new Error("auth");
   }
   if (!res.ok) throw new Error(data.error || "Something went wrong.");
